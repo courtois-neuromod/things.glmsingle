@@ -1,0 +1,1 @@
+7a334460-0b26-4812-8f31-b5f9c7e01605 autoenable=true bucket=cneuromod.things.glmsingle chunk=1GiB datacenter=US encryption=none host=s3.unf-montreal.ca name=unfs3.cneuromod.things.glmsingle port=443 protocol=https requeststyle=path storageclass=STANDARD type=S3 timestamp=1736277431s

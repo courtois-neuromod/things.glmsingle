@@ -1,0 +1,3 @@
+[submodule "code/glmsingle/GLMsingle"]
+	path = code/glmsingle/GLMsingle
+	url = git@github.com:courtois-neuromod/GLMsingle.git

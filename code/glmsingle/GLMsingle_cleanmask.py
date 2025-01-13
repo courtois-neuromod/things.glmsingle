@@ -18,7 +18,7 @@ if __name__ == '__main__':
 
     The following script z-scores BOLD data and identifies
     voxels with NaN scores to be excluded from downstream analyses.
-    FOr each subject, it produces one mask of voxels with 1+ NaN scores
+    For each subject, it produces one mask of voxels with 1+ NaN scores
     (to be excluded) and one mask of voxels with no NaN scores within the
     functional union mask.
     '''

@@ -3,6 +3,8 @@ THINGS fMRI data QCing
 
 ## Compile head motion metrics
 
+This script compiles measures of framewise displacement between consecutive frames for each subject.
+
 Launch the following script to process a subject's sessions
 ```bash
 DATADIR="cneuromod-things/THINGS/data/fmriprep"

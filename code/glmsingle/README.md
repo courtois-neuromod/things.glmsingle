@@ -1,7 +1,7 @@
 GLMsingle Pipeline
 ==============================
-Uses the GLMsingle library to compute trial-wise, voxel-wise beta scores for
-the THINGS memory dataset
+Uses the GLMsingle library to compute trial-wise and voxel-wise beta scores for
+the cneuromod-things dataset
 
 Denoising is performed with GLMdenoise, while the HRF is modelled with a
 function optimized to each voxel from a library of HRF functions. Fractional
@@ -193,7 +193,7 @@ python GLMsingle_noiseceilings.py --things_dir="${DATADIR}" --sub_num="01"
 of voxelwise noise ceilings estimation per voxel masked with Step 5's no-NaN mask, in subject's (T1w) EPI space.
 
 
-To convert ``.nii.gz`` volume into freesurfer surface:
+To convert ``.nii.gz`` volume into freesurfer-compatible surface:
 ```bash
 SUB_NUM="01"
 VOLFILE="sub-${SUB_NUM}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stats-noiseCeilings_statmap.nii.gz"
@@ -203,7 +203,7 @@ mri_vol2surf --src ${VOLFILE} --out ${L_OUTFILE} --regheader "sub-${SUB_NUM}" --
 mri_vol2surf --src ${VOLFILE} --out ${R_OUTFILE} --regheader "sub-${SUB_NUM}" --hemi rh
 ```
 
-To overlay surface data onto inflated brain infreesurfer's freeview:
+To overlay surface data onto an inflated brain in freesurfer's freeview:
 ```bash
 freeview -f $SUBJECTS_DIR/sub-${SUB_NUM}/surf/lh.inflated:overlay=lh.sub-${SUB_NUM}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stats-noiseCeilings_statmap.mgz:overlay_threshold=5,0 -viewport 3d
 freeview -f $SUBJECTS_DIR/sub-${SUB_NUM}/surf/rh.inflated:overlay=rh.sub-${SUB_NUM}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stats-noiseCeilings_statmap.mgz:overlay_threshold=5,0 -viewport 3d

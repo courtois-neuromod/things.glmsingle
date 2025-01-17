@@ -102,7 +102,7 @@ def get_betas(args):
     )
     desc = "perImage" if args.perImg else "perTrial"
     betas = np.load(
-        f"{beta_path}/sub-{sub_num}_task-things_space-T1w_stats-betas_"
+        f"{beta_path}/sub-{sub_num}_task-things_space-T1w_stat-betas_"
         f"desc-{desc}_statseries.npy",
         allow_pickle=True,
     )
@@ -144,7 +144,7 @@ def get_floc_masks(args, things_mask):
     floc_roi_masks = []
     for rname in floc_rois:
         rpath = glob.glob(
-            f"{floc_masks_path}/sub-{sub_num}_task-floc_space-T1w_stats-"
+            f"{floc_masks_path}/sub-{sub_num}_task-floc_space-T1w_stat-"
             f"tscores_contrast-{rname}_cutoff-*_desc-unsmooth_mask.nii.gz"
         )
         assert len(rpath) == 1
@@ -155,7 +155,7 @@ def get_floc_masks(args, things_mask):
     floc_contrasts = ["faces", "places", "bodies"]
     floc_contrast_masks = [
         apply_mask(nib.load(
-            f"{floc_masks_path}/sub-{sub_num}_task-floc_space-T1w_stats-"
+            f"{floc_masks_path}/sub-{sub_num}_task-floc_space-T1w_stat-"
             f"tscores_contrast-{cname}_cutoff-3.72_desc-unsmooth_mask.nii.gz",
         ), things_mask).astype(bool) for cname in floc_contrasts
     ]
@@ -191,8 +191,8 @@ def get_floc_lowthesh(args, things_mask):
         # threshold subject contrast from fLoc task (NSD contrast)
         dmap = nib.load(
             f"{args.data_dir}/fLoc/rois/sub-{sub_num}/glm/"
-            f"sub-{sub_num}_task-floc_space-T1w_model-GLM_stats-tscores_"
-            f"contrast-{c[1]}_desc-unsmooth_statseries.nii.gz"
+            f"sub-{sub_num}_task-floc_space-T1w_model-GLM_stat-tscores_"
+            f"contrast-{c[1]}_desc-unsmooth_statmap.nii.gz"
         )
         thresh_dmap = nib.nifti1.Nifti1Image(
             (dmap.get_fdata() > 2.5).astype("int32"),
@@ -252,7 +252,7 @@ def get_noiseCeil_mask(args, things_mask):
     flat_noiseceil = apply_mask(nib.load(
         f"{args.data_dir}/THINGS/glmsingle/sub-{sub_num}/glmsingle/output/"
         f"sub-{sub_num}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_"
-        "stats-noiseCeilings_statmap.nii.gz",
+        "stat-noiseCeilings_statmap.nii.gz",
     ), things_mask)
 
     nc_thresh = np.sort(flat_noiseceil)[-args.nc_cutoff]
@@ -340,7 +340,7 @@ def save_tsne(args, img_idx, mask_list, tsne_results, nvox_list):
     desc = "perImage" if args.perImg else "perTrial"
     out_path = Path(
         f"{args.data_dir}/THINGS/glmsingle/sub-{args.sub_num}/descriptive/"
-        f"sub-{args.sub_num}_task-things_space-T1w_stats-tSNE_label-visualROIs_"
+        f"sub-{args.sub_num}_task-things_space-T1w_stat-tSNE_label-visualROIs_"
         f"desc-{desc}_statseries.npz"
     )
 

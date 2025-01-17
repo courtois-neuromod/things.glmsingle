@@ -36,18 +36,18 @@ python rank_img_perVox.py --data_dir="${DATADIR}" --sub="01"
 ```
 
 **Input**:
-- ``sub-{sub_num}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stats-imageBetas_desc-zscore_statseries.h5``, the GLM single beta scores organized in groups whose key is the image name (e.g., 'camel_02s').
-- ``sub-{sub_num}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stats-trialBetas_desc-zscore_statseries.h5``, the GLM single beta scores organized in nested groups whose key is the session number and sub-key is the run number.
+- ``sub-{sub_num}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stat-imageBetas_desc-zscore_statseries.h5``, the GLM single beta scores organized in groups whose key is the image name (e.g., 'camel_02s').
+- ``sub-{sub_num}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stat-trialBetas_desc-zscore_statseries.h5``, the GLM single beta scores organized in nested groups whose key is the session number and sub-key is the run number.
 - ``sub-{sub_num}_task-things_space-T1w_label-brain_desc-unionNonNaN_mask.nii``, the functional mask used to vectorize the brain beta scores.
-- ``sub-{sub_num}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stats-noiseCeilings_statmap.nii.gz``, the subject's noise ceiling map derived from the THINGS task.
-- ``fLoc/floc.rois/sub-{sub_num}/rois/task-derived/f"sub-{sub_num}_task-floc_space-T1w_stats-tscores_contrast-*_roi-*cutoff-*_nvox-*_fwhm-5_ratio-0.3_desc-unsmooth_mask.nii.gz``, ROI masks derived from the fLoc task (``sub-06_task-floc_space-T1w_stats-noiseCeil_contrast-*_roi-*_cutoff-*_nvox-100_fwhm-3_mask.nii.gz`` for ``sub-06`` who did not complete fLoc).
+- ``sub-{sub_num}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stat-noiseCeilings_statmap.nii.gz``, the subject's noise ceiling map derived from the THINGS task.
+- ``fLoc/floc.rois/sub-{sub_num}/rois/task-derived/f"sub-{sub_num}_task-floc_space-T1w_stat-tscores_contrast-*_roi-*cutoff-*_nvox-*_fwhm-5_ratio-0.3_desc-unsmooth_mask.nii.gz``, ROI masks derived from the fLoc task (``sub-06_task-floc_space-T1w_stat-noiseCeil_contrast-*_roi-*_cutoff-*_nvox-100_fwhm-3_mask.nii.gz`` for ``sub-06`` who did not complete fLoc).
 
 
 **Output**:
-- ``sub-{sub_num}_task-things_space-T1w_stats-betas_desc-{perImage, perTrial}_statseries.npy``, an array of (image-wise or trial-wise) betas concatenated for the entire dataset.
+- ``sub-{sub_num}_task-things_space-T1w_stat-betas_desc-{perImage, perTrial}_statseries.npy``, an array of (image-wise or trial-wise) betas concatenated for the entire dataset.
 - ``sub-{sub_num}_task-things_desc-{perImage, perTrial}_labels.npy``, an array of corresponding image labels for the beta scores.
-- ``sub-{sub_num}_task-things_space-T1w_stats-ranks_desc-{perImage, perTrial}_statseries.npy``, an array of ranked indices that index image labels and beta scores. Within each column (voxel), indices are ordered according to the magnitude of their (trial-wise or image-wise) beta score, from smallest to largest. These ranks can be used to index image labels and beta scores in the ``*labels.npy`` and the ``*stats-betas_desc-{perImage, perTrial}_statseries.npy`` arrays. E.g., the last 10 ranks of the 3rd column (voxel) index the image labels with the highest beta scores within the 3rd voxel inside the brain mask.
-- For each functional ROI identified with the fLoc task: ``sub-{sub_num}_task-things_space-T1w_{roi_name}_cutoff-{noiseceil_thresh}_nvox-{voxel_count}_stats-{ranks, betas, noiseCeilings}_desc-{perTrial, perImage}_statseries.npy``, the betas, ranked indices and noise ceilings of the 50 voxels with the highest noise ceilings within each ROI mask.
+- ``sub-{sub_num}_task-things_space-T1w_stat-ranks_desc-{perImage, perTrial}_statseries.npy``, an array of ranked indices that index image labels and beta scores. Within each column (voxel), indices are ordered according to the magnitude of their (trial-wise or image-wise) beta score, from smallest to largest. These ranks can be used to index image labels and beta scores in the ``*labels.npy`` and the ``*stat-betas_desc-{perImage, perTrial}_statseries.npy`` arrays. E.g., the last 10 ranks of the 3rd column (voxel) index the image labels with the highest beta scores within the 3rd voxel inside the brain mask.
+- For each functional ROI identified with the fLoc task: ``sub-{sub_num}_task-things_space-T1w_{roi_name}_cutoff-{noiseceil_thresh}_nvox-{voxel_count}_stat-{ranks, betas, noiseCeilings}_desc-{perTrial, perImage}_statseries.npy``, the betas, ranked indices and noise ceilings of the 50 voxels with the highest noise ceilings within each ROI mask.
 
 
 ------------------
@@ -66,19 +66,19 @@ python beta_scaling.py --data_dir="${DATADIR}" --perImg --sub="01"
 ```
 
 **Input**:
-- ``sub-{sub_num}_task-things_space-T1w_stats-betas_desc-{perImage, perTrial}_statseries.npy``, an array of (image-wise or trial-wise) betas concatenated for the entire dataset (generated in Step 2 above).
+- ``sub-{sub_num}_task-things_space-T1w_stat-betas_desc-{perImage, perTrial}_statseries.npy``, an array of (image-wise or trial-wise) betas concatenated for the entire dataset (generated in Step 2 above).
 - ``sub-{sub_num}_task-things_desc-{perImage, perTrial}_labels.npy``, the betas' corresponding image labels (generated in Step 2 above).
 - ``THINGS/glmsingle/sub-{sub_num}/glmsingle/input/sub-{sub_num}_task-things_space-T1w_label-brain_desc-unionNonNaN_mask.nii``, the functional brain mask used to generate the beta arrays.
-- ``fLoc/rois/sub-{sub_num}/rois/task-derived/sub-{sub_num}_task-floc_space-T1w_stats-tscores_contrast-{face_roi-FFA, face_roi-OFA, scene_roi-MPA, scene_roi-OPA, scene_roi-PPA}_cutoff-*_desc-unsmooth_mask.nii.gz``, masks of above-threshold voxels (based on fLoc contrasts) contained within ROI masks from the Kanwisher group.
-- ``fLoc/rois/sub-{sub_num}/rois/task-derived/sub-{sub_num}_task-floc_space-T1w_stats-tscores_contrast-{faces, bodies, places}_cutoff-3.72_desc-unsmooth_mask.nii.g``, masks of above-threshold voxels (t > 3.72) on fLoc contrasts (faces, bodies and places) contained within their respective set of Kanwisher parcels (face, body or scene).
-- ``fLoc/rois/sub-{sub_num}/glm/sub-{sub_num}_task-floc_space-T1w_model-GLM_stats-tscores_contrast-{faces, bodies, places}_desc-unsmooth_statseries.nii.gz``, t-scores for the faces, bodies and places contrasts derived from the fLoc task (NSD-style contrasts).
+- ``fLoc/rois/sub-{sub_num}/rois/task-derived/sub-{sub_num}_task-floc_space-T1w_stat-tscores_contrast-{face_roi-FFA, face_roi-OFA, scene_roi-MPA, scene_roi-OPA, scene_roi-PPA}_cutoff-*_desc-unsmooth_mask.nii.gz``, masks of above-threshold voxels (based on fLoc contrasts) contained within ROI masks from the Kanwisher group.
+- ``fLoc/rois/sub-{sub_num}/rois/task-derived/sub-{sub_num}_task-floc_space-T1w_stat-tscores_contrast-{faces, bodies, places}_cutoff-3.72_desc-unsmooth_mask.nii.g``, masks of above-threshold voxels (t > 3.72) on fLoc contrasts (faces, bodies and places) contained within their respective set of Kanwisher parcels (face, body or scene).
+- ``fLoc/rois/sub-{sub_num}/glm/sub-{sub_num}_task-floc_space-T1w_model-GLM_stat-tscores_contrast-{faces, bodies, places}_desc-unsmooth_statmap.nii.gz``, t-scores for the faces, bodies and places contrasts derived from the fLoc task (NSD-style contrasts).
 - ``fLoc/rois/sub-{sub_num}/rois/from_atlas/sub-{sub_num}_parcel-kanwisher_space-T1w_contrast-{c[0]}_mask.nii``, group-derived parcels from the Kanwisher group warped to single-subject space.
 - ``retinotopy/prf/sub-{sub_num}/rois/sub-{sub_num}_task-retinotopy_space-T1w_res-func_model-npythy_label-{V1, V2, V3}_desc-nn_mask.nii.gz``, masks of visual areas V1, V2 and V3 derived from retinotopy data and group priors with NeuroPythy.
-- ``THINGS/glmsingle/sub-{sub_num}/glmsingle/output/sub-{sub_num}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stats-noiseCeilings_statmap.nii.gz``, maps of voxelwise noise ceilings derived from the THINGS task.
+- ``THINGS/glmsingle/sub-{sub_num}/glmsingle/output/sub-{sub_num}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stat-noiseCeilings_statmap.nii.gz``, maps of voxelwise noise ceilings derived from the THINGS task.
 
 
 **Output**:
-``sub-{sub_num}_task-things_space-T1w_stats-tSNE_label-visualROIs_desc-{perImage, perTrial}_statseries.npz``, a collection of numpy arrays that contain t-SNE components (and their corresponding labels) derived from voxel beta scores (per trial or per image) contained within the following visual ROIs:
+``sub-{sub_num}_task-things_space-T1w_stat-tSNE_label-visualROIs_desc-{perImage, perTrial}_statseries.npz``, a collection of numpy arrays that contain t-SNE components (and their corresponding labels) derived from voxel beta scores (per trial or per image) contained within the following visual ROIs:
 - face-sensitive regions FFA and OFA
 - scene-sensitive regions PPA, MPA and OPA
 - low-level visual areas V1, V2 and V3

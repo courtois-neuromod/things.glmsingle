@@ -79,7 +79,7 @@ def compile_betas_hdf5(data_dir, sub_num, zbetas=False):
     zname = 'desc-zscore_' if zbetas else ''
     subj_h5file = h5py.File(
         f"{data_dir}/sub-{sub_num}/glmsingle/output/sub-{sub_num}_task-things_"
-        f"space-T1w_model-fitHrfGLMdenoiseRR_stats-trialBetas_{zname}statseries.h5",
+        f"space-T1w_model-fitHrfGLMdenoiseRR_stat-trialBetas_{zname}statseries.h5",
         'w',
     )
 

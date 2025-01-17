@@ -64,14 +64,14 @@ def rank_roi_betas(
     flat_noiseceil = apply_mask(nib.load(
         f"{data_dir}/THINGS/glmsingle/sub-{sub_num}/glmsingle/output/"
         f"sub-{sub_num}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_"
-        "stats-noiseCeilings_statmap.nii.gz",
+        "stat-noiseCeilings_statmap.nii.gz",
     ), things_mask)
 
     # list ROI masks from fLoc
     roi_mask_list = sorted(
         glob.glob(
             f"{data_dir}/fLoc/rois/sub-{sub_num}/rois/task-derived/"
-            f"sub-{sub_num}_task-floc_space-T1w_stats-tscores_contrast-*_roi-*_"
+            f"sub-{sub_num}_task-floc_space-T1w_stat-tscores_contrast-*_roi-*_"
             "cutoff-*_nvox-*_fwhm-5_ratio-0.3_desc-unsmooth_mask.nii.gz",
         )
     )
@@ -80,7 +80,7 @@ def rank_roi_betas(
         roi_mask_list = sorted(
             glob.glob(
                 f"{data_dir}/fLoc/rois/sub-{sub_num}/rois/task-derived/"
-                f"sub-{sub_num}_task-floc_space-T1w_stats-noiseCeil_contrast-*"
+                f"sub-{sub_num}_task-floc_space-T1w_stat-noiseCeil_contrast-*"
                 f"_roi-*_cutoff-*_nvox-100_fwhm-3_mask.nii.gz",
             )
         )
@@ -109,19 +109,19 @@ def rank_roi_betas(
         np.save(
             f"{data_dir}/THINGS/glmsingle/sub-{sub_num}/descriptive/"
             f"sub-{sub_num}_task-things_space-T1w_{roi_name}_cutoff-{tval}_"
-            f"nvox-{roi_cutoff}_stats-ranks_{desc}_statseries.npy",
+            f"nvox-{roi_cutoff}_stat-ranks_{desc}_statseries.npy",
             roi_idx,
         )
         np.save(
             f"{data_dir}/THINGS/glmsingle/sub-{sub_num}/descriptive/"
             f"sub-{sub_num}_task-things_space-T1w_{roi_name}_cutoff-{tval}_"
-            f"nvox-{roi_cutoff}_stats-betas_{desc}_statseries.npy",
+            f"nvox-{roi_cutoff}_stat-betas_{desc}_statseries.npy",
             roi_bloc,
         )
         np.save(
             f"{data_dir}/THINGS/glmsingle/sub-{sub_num}/descriptive/"
             f"sub-{sub_num}_task-things_space-T1w_{roi_name}_cutoff-{tval}_"
-            f"nvox-{roi_cutoff}_stats-noiseCeilings_{desc}_statseries.npy",
+            f"nvox-{roi_cutoff}_stat-noiseCeilings_{desc}_statseries.npy",
             roi_NCs,
         )
 
@@ -142,7 +142,7 @@ def rank_imgs_per_vox(
     subj_h5file = h5py.File(
         f"{data_dir}/THINGS/glmsingle/sub-{sub_num}/glmsingle/output/"
         f"sub-{sub_num}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_"
-        "stats-imageBetas_desc-zscore_statseries.h5",
+        "stat-imageBetas_desc-zscore_statseries.h5",
         "r",
     )
 
@@ -173,7 +173,7 @@ def rank_imgs_per_vox(
     )
     np.save(
         f"{data_dir}/THINGS/glmsingle/sub-{sub_num}/descriptive/"
-        f"sub-{sub_num}_task-things_space-T1w_stats-betas_desc-perImage_"
+        f"sub-{sub_num}_task-things_space-T1w_stat-betas_desc-perImage_"
         "statseries.npy",
         beta_block,
     )
@@ -198,7 +198,7 @@ def rank_imgs_per_vox(
 
     np.save(
         f"{data_dir}/THINGS/glmsingle/sub-{sub_num}/descriptive/"
-        f"sub-{sub_num}_task-things_space-T1w_stats-ranks_desc-perImage_"
+        f"sub-{sub_num}_task-things_space-T1w_stat-ranks_desc-perImage_"
         "statseries.npy",
         beta_idx,
     )
@@ -283,7 +283,7 @@ def rank_imgs_per_vox_perTrial(
     subj_h5file = h5py.File(
         f"{data_dir}/THINGS/glmsingle/sub-{sub_num}/glmsingle/output/"
         f"sub-{sub_num}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_"
-        "stats-trialBetas_desc-zscore_statseries.h5",
+        "stat-trialBetas_desc-zscore_statseries.h5",
         "r",
     )
 
@@ -301,7 +301,7 @@ def rank_imgs_per_vox_perTrial(
     )
     np.save(
         f"{data_dir}/THINGS/glmsingle/sub-{sub_num}/descriptive/"
-        f"sub-{sub_num}_task-things_space-T1w_stats-betas_desc-perTrial_"
+        f"sub-{sub_num}_task-things_space-T1w_stat-betas_desc-perTrial_"
         "statseries.npy",
         beta_block,
     )
@@ -315,7 +315,7 @@ def rank_imgs_per_vox_perTrial(
 
     np.save(
         f"{data_dir}/THINGS/glmsingle/sub-{sub_num}/descriptive/"
-        f"sub-{sub_num}_task-things_space-T1w_stats-ranks_desc-perTrial_"
+        f"sub-{sub_num}_task-things_space-T1w_stat-ranks_desc-perTrial_"
         "statseries.npy",
         beta_idx,
     )

@@ -189,24 +189,24 @@ python GLMsingle_noiseceilings.py --things_dir="${DATADIR}" --sub_num="01"
 - A subject's ``cneuromod-things/THINGS/behaviour/sub-{sub_num}/beh/sub-{sub_num}_task-things_desc-perTrial_annotations.tsv``, a single .tsv file per subject with trial-wise performance metrics and image annotations created with the ``cneuromod-things/THINGS/behaviour/code/behav_data_annotate.py`` script in the above preliminary step.
 
 **Output**:
-- ``sub-{sub_num}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stats-noiseCeilings_statmap.nii.gz``, a brain volume
+- ``sub-{sub_num}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stat-noiseCeilings_statmap.nii.gz``, a brain volume
 of voxelwise noise ceilings estimation per voxel masked with Step 5's no-NaN mask, in subject's (T1w) EPI space.
 
 
 To convert ``.nii.gz`` volume into freesurfer-compatible surface:
 ```bash
 SUB_NUM="01"
-VOLFILE="sub-${SUB_NUM}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stats-noiseCeilings_statmap.nii.gz"
-L_OUTFILE="lh.sub-${SUB_NUM}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stats-noiseCeilings_statmap.mgz"
-R_OUTFILE="rh.sub-${SUB_NUM}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stats-noiseCeilings_statmap.mgz"
+VOLFILE="sub-${SUB_NUM}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stat-noiseCeilings_statmap.nii.gz"
+L_OUTFILE="lh.sub-${SUB_NUM}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stat-noiseCeilings_statmap.mgz"
+R_OUTFILE="rh.sub-${SUB_NUM}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stat-noiseCeilings_statmap.mgz"
 mri_vol2surf --src ${VOLFILE} --out ${L_OUTFILE} --regheader "sub-${SUB_NUM}" --hemi lh
 mri_vol2surf --src ${VOLFILE} --out ${R_OUTFILE} --regheader "sub-${SUB_NUM}" --hemi rh
 ```
 
 To overlay surface data onto an inflated brain in freesurfer's freeview:
 ```bash
-freeview -f $SUBJECTS_DIR/sub-${SUB_NUM}/surf/lh.inflated:overlay=lh.sub-${SUB_NUM}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stats-noiseCeilings_statmap.mgz:overlay_threshold=5,0 -viewport 3d
-freeview -f $SUBJECTS_DIR/sub-${SUB_NUM}/surf/rh.inflated:overlay=rh.sub-${SUB_NUM}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stats-noiseCeilings_statmap.mgz:overlay_threshold=5,0 -viewport 3d
+freeview -f $SUBJECTS_DIR/sub-${SUB_NUM}/surf/lh.inflated:overlay=lh.sub-${SUB_NUM}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stat-noiseCeilings_statmap.mgz:overlay_threshold=5,0 -viewport 3d
+freeview -f $SUBJECTS_DIR/sub-${SUB_NUM}/surf/rh.inflated:overlay=rh.sub-${SUB_NUM}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stat-noiseCeilings_statmap.mgz:overlay_threshold=5,0 -viewport 3d
 ```
 
 ------------
@@ -234,7 +234,7 @@ Note: omit the ``--zbetas`` flag to extract raw GLMsingle betas (not z-scored)
 ``sub-{sub_num}_task-things_space-T1w_label-brain_desc-unionNonNaN_mask.nii`` masks created in Steps 2 and 5, respectively.
 
 **Output**:
-- ``sub-{sub_num}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stats-trialBetas_desc-zscore_statseries.h5``, a single ``.h5`` file
+- ``sub-{sub_num}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stat-trialBetas_desc-zscore_statseries.h5``, a single ``.h5`` file
 that contains beta scores organized in nested groups whose key is the session number and sub-key is the run number.
 Betas are saved into arrays of dim=(trials, voxels) where each row is a 1D array of flattened voxel scores masked with the no-NaN functional mask. All trials are included, and rows correspond with those of the ``cneuromod-things/THINGS/fmriprep/sourcedata/things/sub-{sub_num}/ses-*/func/sub-{sub_num}_ses-*_task-things_run-*_events.tsv`` files.
 - Beside the betas, the ``.h5`` file also contains the raw 3D array and 4x4 affine matrix of the no-NaN functional mask, whose dims match the input bold volumes. These two arrays (``mask_array`` and ``mask_affine``) can be used to unmask 1D beta arrays to convert them back into brain volumes (in native space).
@@ -246,7 +246,7 @@ import nibabel as nib
 from nilearn.masking import unmask
 
 sub_num = '01'
-h5file = h5py.File(f'path/to/sub-{sub_num}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stats-trialBetas_desc-zscore_statseries.h5', 'r')
+h5file = h5py.File(f'path/to/sub-{sub_num}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stat-trialBetas_desc-zscore_statseries.h5', 'r')
 mask = nib.nifti1.Nifti1Image(np.array(h5file['mask_array']), affine=np.array(h5file['mask_affine']))
 s10_r2_t5_unmasked_betas = unmask(np.array(h5file['10']['2']['betas'])[4, :], mask)  # trials indexed from 0
 ```
@@ -277,7 +277,7 @@ python GLMsingle_betasPerImg.py --things_dir="${DATADIR}" --zbetas --sub_num="01
 ``sub-{sub_num}_task-things_space-T1w_label-brain_desc-unionNonNaN_mask.nii`` masks created in Steps 2 and 5, respectively.
 
 **Output**: \
-``sub-{sub_num}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stats-imageBetas_desc-zscore_statseries.h5``, a file that contains beta scores organized in groups whose key is the image name (e.g., 'camel_02s'). Under each image, each group includes:
+``sub-{sub_num}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stat-imageBetas_desc-zscore_statseries.h5``, a file that contains beta scores organized in groups whose key is the image name (e.g., 'camel_02s'). Under each image, each group includes:
 - ``betas``: the betas averaged per image (up to 3 repetitions, excluding trials with no answer), saved as a 1D array of flattened voxels masked with the no-NaN functional mask.
 - ``num_reps``: the number of image repetitions included in the averaging.
 - ``blank``: the number of trials with no recorded answers (no button press)
@@ -293,7 +293,7 @@ import nibabel as nib
 from nilearn.masking import unmask
 
 sub_num = '01'
-h5file = h5py.File(f'path/to/sub-{sub_num}_model-fitHrfGLMdenoiseRR_stats-imageBetas_desc-zscore_statseries.h5', 'r')
+h5file = h5py.File(f'path/to/sub-{sub_num}_model-fitHrfGLMdenoiseRR_stat-imageBetas_desc-zscore_statseries.h5', 'r')
 mask = nib.nifti1.Nifti1Image(np.array(h5file['mask_array']), affine=np.array(h5file['mask_affine']))
 velcro_04s_unmasked_betas = unmask(np.array(h5file['velcro_04s']['betas']), mask)
 ```

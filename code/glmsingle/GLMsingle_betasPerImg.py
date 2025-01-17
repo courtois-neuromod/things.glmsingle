@@ -253,7 +253,7 @@ def average_betas_perImg(data_dir, sub_num, rm_blanks=False, zbetas=False):
     zname = 'desc-zscore_' if zbetas else ''
     subj_h5file = h5py.File(
         f"{data_dir}/glmsingle/sub-{sub_num}/glmsingle/output/sub-{sub_num}_"
-        f"task-things_space-T1w_model-fitHrfGLMdenoiseRR_stats-imageBetas_{zname}statseries.h5",
+        f"task-things_space-T1w_model-fitHrfGLMdenoiseRR_stat-imageBetas_{zname}statseries.h5",
         'w',
     )
     subj_h5file = avg_beta(

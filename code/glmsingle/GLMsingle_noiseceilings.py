@@ -269,6 +269,6 @@ if __name__ == '__main__':
     nc_nii = unmask(nc_arr, clean_mask)  # remove NaN voxels
     outpath_nii = Path(
         f"{data_path}/output/sub-{sub_num}_task-things_"
-        "space-T1w_model-fitHrfGLMdenoiseRR_stats-noiseCeilings_statmap.nii.gz"
+        "space-T1w_model-fitHrfGLMdenoiseRR_stat-noiseCeilings_statmap.nii.gz"
     )
     nib.save(nc_nii, outpath_nii)

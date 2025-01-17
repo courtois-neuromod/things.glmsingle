@@ -16,7 +16,7 @@ python compile_headmotion.py --data_dir="${DATADIR}" --out_dir="${OUTDIR}" --sub
 
 *Input*:
 
-- A subject's ``desc-confounds`` files outputed by fmriprep for each run. E.g., ``sub-06_ses-30_task-things_run-5_desc-confounds_part-mag_timeseries.tsv``
+- A subject's ``desc-confounds`` files outputed by fmriprep for each run. E.g., ``sub-06_ses-30_task-things_run-5_part-mag_desc-confounds_timeseries.tsv``
 
 *Output*:
 

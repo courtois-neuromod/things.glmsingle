@@ -18,7 +18,7 @@ def get_arguments():
         required=True,
         type=str,
         help='absolute path to root dataset directory that contains '
-        'desc-confounds_part-mag_timeseries.tsv files',
+        '_part-mag_desc-confounds_timeseries.tsv files',
     )
     parser.add_argument(
         '--out_dir',
@@ -45,7 +45,7 @@ def extract_motion(
     extract head motion metrics and concatenate in dataframe.
     Export as .tsv
     '''
-    suffix = '_desc-confounds_part-mag_timeseries.tsv'
+    suffix = '_part-mag_desc-confounds_timeseries.tsv'
     confound_files = sorted(glob.glob(
         f"{data_path}/sub-{sub_num}/ses-*/func/*{suffix}"))
 

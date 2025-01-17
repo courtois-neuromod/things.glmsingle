@@ -35,7 +35,7 @@ if __name__ == '__main__':
     out_path = f"{args.things_dir}/glmsingle"
 
     sub_list = ['01', '02', '03', '06']
-    suffix = '_space-T1w_desc-preproc_part-mag_bold.nii.gz'
+    suffix = '_part-mag_space-T1w_desc-preproc_bold.nii.gz'
 
     for sub_num in sub_list:
         mask_path = f'{out_path}/sub-{sub_num}/glmsingle/input'

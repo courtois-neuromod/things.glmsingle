@@ -55,7 +55,7 @@ python GLMsingle_preprocBOLD.py --data_dir="${DATADIR}" --out_dir="${OUTDIR}" --
 
 **Input**:
 - All of a subject's ``*_bold.nii.gz`` files, for all sessions (~36) and runs (6 per session)
-(e.g., ``sub-03_ses-10_task-things_run-1_space-T1w_desc-preproc_part-mag_bold.nii.gz``).
+(e.g., ``sub-03_ses-10_task-things_run-1_part-mag_space-T1w_desc-preproc_bold.nii.gz``).
 Note that the script can process scans in MNI or T1w space (default is T1w; use default).
 
 **Output**:
@@ -145,7 +145,7 @@ python GLMsingle_cleanmask.py --things_dir="${DATADIR}"
 
 **Input**:
 - All 4 subject's ``*bold.nii.gz`` files, for all sessions (~36) and runs (6 per session) \
-(e.g., ``sub-03_ses-10_task-things_run-1_space-T1w_desc-preproc_part-mag_bold.nii.gz``)
+(e.g., ``sub-03_ses-10_task-things_run-1_part-mag_space-T1w_desc-preproc_bold.nii.gz``)
 - ``sub-{sub_num}_task-things_space-T1w_label-brain_desc-union_mask.nii``, the
 functional mask generated from the union of the functional masks of every run in Step 2.
 

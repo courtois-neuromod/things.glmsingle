@@ -49,11 +49,11 @@ def compile_maskedBOLD_hdf5(data_path, out_path, sub_num, mni=False):
     Generate a mask from the union of brain voxels across sessions and runs
     '''
     if mni:
-        mask_suffix = '_space-MNI152NLin2009cAsym_desc-brain_part-mag_mask.nii.gz'
-        mspace = 'T1w'
-    else:
-        mask_suffix = '_space-T1w_desc-brain_part-mag_mask.nii.gz'
+        mask_suffix = '_part-mag_space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz'
         mspace = 'MNI'
+    else:
+        mask_suffix = '_part-mag_space-T1w_desc-brain_mask.nii.gz'
+        mspace = 'T1w'
 
     mask_list = sorted(
         glob.glob(f'{data_path}/sub-{sub_num}/ses-*/func/*{mask_suffix}')
@@ -73,9 +73,9 @@ def compile_maskedBOLD_hdf5(data_path, out_path, sub_num, mni=False):
     Time is in TR (1.49s)
     '''
     if mni:
-        suffix = '_space-MNI152NLin2009cAsym_desc-preproc_part-mag_bold.nii.gz'
+        suffix = '_part-mag_space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz'
     else:
-        suffix = '_space-T1w_desc-preproc_part-mag_bold.nii.gz'
+        suffix = '_part-mag_space-T1w_desc-preproc_bold.nii.gz'
 
     bold_files = sorted(
         glob.glob(f'{data_path}/sub-{sub_num}/ses-*/func/*{suffix}')

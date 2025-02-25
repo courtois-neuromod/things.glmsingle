@@ -246,10 +246,10 @@ def build_matrices(data_dir, sub_num, s_h5file, sess_file, sessions, rm_blanks=T
     for ses in tqdm.tqdm(sessions, desc = 'creating image and beta matrices'):
         runs = [f'{x:02}' for x in list(sess_file[sub_num][ses])]
         ses_num = f'{int(ses):02}'
-        ses_df = sub_df[sub_df['session']==f'ses-0{ses_num}']
+        ses_df = sub_df[sub_df['session_id']==f'ses-0{ses_num}']
 
         for run in runs:
-            run_df = ses_df[ses_df['run']==int(run)]
+            run_df = ses_df[ses_df['run_id']==int(run)]
 
             run_imgs = run_df['image_name'].to_numpy()
             nan_vec = pd.isna(run_df['response_type'])

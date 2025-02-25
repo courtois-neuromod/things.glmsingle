@@ -84,12 +84,12 @@ def get_img_vector(things_dir, sub_num, sess_file, sessions, n=3, rm_blanks=Fals
         runs = [f'{x:02}' for x in list(sess_file[sub_num][ses])]
         ses_num = f'{int(ses):02}'
         if rm_blanks:
-            ses_df = sub_df[sub_df['session']==f'ses-0{ses_num}']
+            ses_df = sub_df[sub_df['session_id']==f'ses-0{ses_num}']
 
         for run in runs:
             run_imgNum = np.array(des_file[ses_num][run]['design_coord'])[:, 1]
             if rm_blanks:
-                run_df = ses_df[ses_df['run']==int(run)]
+                run_df = ses_df[ses_df['run_id']==int(run)]
                 nan_vec = pd.isna(run_df['response_type'])
                 # replace image number with -1 when no button press recorded
                 run_imgNum[nan_vec] = -1

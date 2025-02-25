@@ -49,7 +49,7 @@ def extract_motion(
     confound_files = sorted(glob.glob(
         f"{data_path}/sub-{sub_num}/ses-*/func/*{suffix}"))
 
-    ids = ['session', 'run']
+    ids = ['session_id', 'run_id']
     col_names = [
         'framewise_displacement',
         'trans_x', 'trans_y', 'trans_z',
@@ -68,10 +68,10 @@ def extract_motion(
 
         df_run = pd.read_csv(conf_path, sep = '\t')[col_names]
         df_run.insert(
-            loc=0, column='session', value=ses_num, allow_duplicates=True,
+            loc=0, column='session_id', value=ses_num, allow_duplicates=True,
         )
         df_run.insert(
-            loc=1, column='run', value=run_num, allow_duplicates=True,
+            loc=1, column='run_id', value=run_num, allow_duplicates=True,
         )
         sub_df = pd.concat((sub_df, df_run), ignore_index=True)
 

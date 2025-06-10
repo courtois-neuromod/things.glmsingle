@@ -1,3 +1,5 @@
 [submodule "code/glmsingle/GLMsingle"]
 	path = code/glmsingle/GLMsingle
-	url = git@github.com:courtois-neuromod/GLMsingle.git
+	url = git@github.com:cvnlab/GLMsingle.git
+	datalad-url = https://github.com/cvnlab/GLMsingle.git
+	

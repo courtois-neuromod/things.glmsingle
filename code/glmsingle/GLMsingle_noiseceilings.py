@@ -26,6 +26,12 @@ def get_arguments():
         type=str,
         help='two-digit subject number',
     )
+    parser.add_argument(
+        '--mni',
+        action='store_true',
+        default=False,
+        help='if true, compute noise ceiling maps in MNI space, else native T1w space',
+    )        
     return parser.parse_args()
 
 
@@ -243,9 +249,10 @@ if __name__ == '__main__':
 
     things_dir = args.things_dir
     sub_num = args.sub_num
+    vol_space = 'MNI152NLin2009cAsym' if args.mni else 'T1w'
 
     data_path = f"{things_dir}/glmsingle/sub-{sub_num}/glmsingle"
-    in_file = f"{data_path}/output/T1w/TYPED_FITHRF_GLMDENOISE_RR.mat"
+    in_file = f"{data_path}/output/{vol_space}/TYPED_FITHRF_GLMDENOISE_RR.mat"
 
     nc_arr = compute_noise_ceiling(
         things_dir,
@@ -258,17 +265,17 @@ if __name__ == '__main__':
     # unmask array with union functional mask, and remask with no-NaN mask
     union_mask = nib.load(
         f"{data_path}/input/sub-{sub_num}_task-things_"
-        "space-T1w_label-brain_desc-union_mask.nii"
+        f"space-{vol_space}_label-brain_desc-union_mask.nii"
     )
     clean_mask = nib.load(
         f"{data_path}/input/sub-{sub_num}_task-things_"
-        "space-T1w_label-brain_desc-unionNonNaN_mask.nii"
+        f"space-{vol_space}_label-brain_desc-unionNonNaN_mask.nii"
     )
 
     nc_arr = apply_mask(unmask(nc_arr, union_mask), clean_mask)
     nc_nii = unmask(nc_arr, clean_mask)  # remove NaN voxels
     outpath_nii = Path(
         f"{data_path}/output/sub-{sub_num}_task-things_"
-        "space-T1w_model-fitHrfGLMdenoiseRR_stat-noiseCeilings_statmap.nii.gz"
+        f"space-{vol_space}_model-fitHrfGLMdenoiseRR_stat-noiseCeilings_statmap.nii.gz"
     )
     nib.save(nc_nii, outpath_nii)

@@ -8,7 +8,7 @@ addpath(genpath([data_dir '/sub-' sub_num '/glmsingle/input']));
 
 % Parameters specified when calling script (as reference)
 %sub_num = '03';
-%bold_type = 'MNI';
+%bold_type = 'MNI152NLin2009cAsym';
 %bold_type = 'T1w';
 %chunk_size = '35000';
 

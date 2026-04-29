@@ -20,7 +20,7 @@ def get_arguments():
         '--data_dir',
         required=True,
         type=str,
-        help='absolute path to root dataset directory that contains events.tsv files',
+        help='absolute path to derivative dataset directory that contains fmriprep output',
     )
     parser.add_argument(
         '--out_dir',
@@ -50,7 +50,7 @@ def compile_maskedBOLD_hdf5(data_path, out_path, sub_num, mni=False):
     '''
     if mni:
         mask_suffix = '_part-mag_space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz'
-        mspace = 'MNI'
+        mspace = 'MNI152NLin2009cAsym'
     else:
         mask_suffix = '_part-mag_space-T1w_desc-brain_mask.nii.gz'
         mspace = 'T1w'
@@ -83,7 +83,7 @@ def compile_maskedBOLD_hdf5(data_path, out_path, sub_num, mni=False):
 
 
     if mni:
-        subj_h5file = h5py.File(f'{sub_out_path}/sub-{sub_num}_task-things_space-MNI_maskedBOLD.h5','w')
+        subj_h5file = h5py.File(f'{sub_out_path}/sub-{sub_num}_task-things_space-MNI152NLin2009cAsym_maskedBOLD.h5','w')
     else:
         subj_h5file = h5py.File(f'{sub_out_path}/sub-{sub_num}_task-things_space-T1w_maskedBOLD.h5','w')
 

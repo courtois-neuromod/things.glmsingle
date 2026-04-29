@@ -52,6 +52,7 @@ OUTDIR="cneuromod-things/THINGS/glmsingle"
 
 python GLMsingle_preprocBOLD.py --data_dir="${DATADIR}" --out_dir="${OUTDIR}" --sub="01"
 ```
+Note: add the --mni flag to vectorize BOLD volumes in MNI space (default is native T1w space)
 
 **Input**:
 - All of a subject's ``*_bold.nii.gz`` files, for all sessions (~36) and runs (6 per session)

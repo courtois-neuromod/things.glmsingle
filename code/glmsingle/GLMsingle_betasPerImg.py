@@ -33,6 +33,12 @@ def get_arguments():
         type=str,
         help='two-digit subject number',
     )
+    parser.add_argument(
+        '--mni',
+        action='store_true',
+        default=False,
+        help='if true, extract betas in MNI space, else native T1w space',
+    )    
 
     return parser.parse_args()
 
@@ -216,7 +222,7 @@ def get_img_vector(data_dir, sub_num, sess_file, sessions, rm_blanks=False):
     return img_vector, labels, checked_imgs
 
 
-def average_betas_perImg(data_dir, sub_num, rm_blanks=False, zbetas=False):
+def average_betas_perImg(data_dir, sub_num, rm_blanks=False, zbetas=False, mni=False):
     '''
     Step 1: create vector that labels each trial by its image
     Validate image number/name correspondance for that subject
@@ -229,9 +235,10 @@ def average_betas_perImg(data_dir, sub_num, rm_blanks=False, zbetas=False):
     '''
     Step 2: load betas from GLMsingle output file (model D)
     '''
+    vol_space = 'MNI152NLin2009cAsym' if mni else 'T1w'
     matfile = h5py.File(
-        f"{data_dir}/glmsingle/sub-{sub_num}/glmsingle/output/T1w/"
-        "TYPED_FITHRF_GLMDENOISE_RR.mat", 'r',
+        f"{data_dir}/glmsingle/sub-{sub_num}/glmsingle/output/"
+        f"{vol_space}/TYPED_FITHRF_GLMDENOISE_RR.mat", 'r',
     )
     betas = np.squeeze(np.array(matfile['modelmd']))
     matfile.close()
@@ -244,16 +251,16 @@ def average_betas_perImg(data_dir, sub_num, rm_blanks=False, zbetas=False):
     '''
     union_mask = nib.load(
         f"{data_dir}/glmsingle/sub-{sub_num}/glmsingle/input/"
-        f"sub-{sub_num}_task-things_space-T1w_label-brain_desc-union_mask.nii"
+        f"sub-{sub_num}_task-things_space-{vol_space}_label-brain_desc-union_mask.nii"
     )
     clean_mask = nib.load(
         f"{data_dir}/glmsingle/sub-{sub_num}/glmsingle/input/"
-        f"sub-{sub_num}_task-things_space-T1w_label-brain_desc-unionNonNaN_mask.nii"
+        f"sub-{sub_num}_task-things_space-{vol_space}_label-brain_desc-unionNonNaN_mask.nii"
     )
     zname = 'desc-zscore_' if zbetas else ''
     subj_h5file = h5py.File(
         f"{data_dir}/glmsingle/sub-{sub_num}/glmsingle/output/sub-{sub_num}_"
-        f"task-things_space-T1w_model-fitHrfGLMdenoiseRR_stat-imageBetas_{zname}statseries.h5",
+        f"task-things_space-{vol_space}_model-fitHrfGLMdenoiseRR_stat-imageBetas_{zname}statseries.h5",
         'w',
     )
     subj_h5file = avg_beta(
@@ -282,5 +289,6 @@ if __name__ == '__main__':
     args = get_arguments()
 
     average_betas_perImg(
-        args.things_dir, args.sub_num, rm_blanks=True, zbetas=args.zbetas,
+        args.things_dir, args.sub_num, rm_blanks=True, 
+        zbetas=args.zbetas, mni=args.mni,
     )

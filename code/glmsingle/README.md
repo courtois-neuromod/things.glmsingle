@@ -52,7 +52,7 @@ OUTDIR="cneuromod-things/THINGS/glmsingle"
 
 python GLMsingle_preprocBOLD.py --data_dir="${DATADIR}" --out_dir="${OUTDIR}" --sub="01"
 ```
-Note: add the --mni flag to vectorize BOLD volumes in MNI space (default is native T1w space)
+Note: add the ``--mni`` flag to vectorize BOLD volumes in MNI space (default is native T1w space)
 
 **Input**:
 - All of a subject's ``*_bold.nii.gz`` files, for all sessions (~36) and runs (6 per session)
@@ -65,8 +65,6 @@ one flattened matrix of dim = (voxels x time points in TRs) per session & run.
 Note that the first two volumes of bold data are dropped for signal equilibrium.
 - ``sub-{sub_num}_task-things_space-{MNI, T1w}_label-brain_desc-union_mask.nii``, a mask file
 generated from the union of functional ``*_mask.nii.gz`` files saved along the ``*_bold.nii.gz`` files. \
-Note: by default, the script processes BOLD data in subject (``T1w``) space, but
-it can process data in ``MNI`` space by passing the ``--mni`` argument.
 
 NOTE: sub-06 session 8, run 6 was corrupted (brain voxels misaligned with other
 fmriprepped runs). All final analyses were redone without that run.
@@ -143,7 +141,7 @@ Launch this script once to process all subjects
 DATADIR="cneuromod-things/THINGS"
 python GLMsingle_cleanmask.py --things_dir="${DATADIR}"
 ```
-Note: add the --mni flag to create masks in MNI space (default is native T1w space)
+Note: add the ``--mni`` flag to create masks in MNI space (default is native T1w space)
 
 **Input**:
 - All 4 subject's ``*bold.nii.gz`` files, for all sessions (~36) and runs (6 per session) \
@@ -181,7 +179,7 @@ To compute noise ceilings, launch the following script for each subject:
 DATADIR="cneuromod-things/THINGS"
 python GLMsingle_noiseceilings.py --things_dir="${DATADIR}" --sub_num="01"
 ```
-Note: add the --mni flag to compute noise ceilings in MNI space (default is native T1w space)
+Note: add the ``--mni`` flag to compute noise ceilings in MNI space (default is native T1w space)
 
 **Input**:
 - A subject's ``TYPED_FITHRF_GLMDENOISE_RR.mat``, a single .mat file outputted by GLMsingle (model D) in Step 4, which contains trial-unique betas per voxel
@@ -221,23 +219,23 @@ Export trialwise normalized (z-scored) beta scores estimated with GLMsingle mode
 organized per run within session.
 
 Betas are saved into arrays of dim=(trials, voxels) where each row is a 1D array of
-flattened voxel scores masked with the ``sub-{sub_num}_task-things_space-T1w_label-brain_desc-unionNonNaN_mask.nii`` functional mask.
+flattened voxel scores masked with the ``sub-{sub_num}_task-things_space-{T1w, MNI152NLin2009cAsym}_label-brain_desc-unionNonNaN_mask.nii`` functional mask.
 
 Run the following script for each subject:
 ```bash
 DATADIR="cneuromod-things/THINGS/glmsingle"
 python GLMsingle_betasPerTrial.py --data_dir="${DATADIR}" --zbetas --sub_num="01"
 ```
-Note: omit the ``--zbetas`` flag to extract raw GLMsingle betas (not z-scored)
+Note: omit the ``--zbetas`` flag to extract raw GLMsingle betas (not z-scored). Add the ``--mni`` flag extract betas in MNI space (default is native T1w space).
 
 **Input**:
 - A subject's ``TYPED_FITHRF_GLMDENOISE_RR.mat``, a single .mat file outputted by GLMsingle (model D) in Step 4, which contains trial-unique betas per voxel
 - ``task-things_runlist.h5``, a single file with nested lists of valid runs per session for each subject created in Step 3.
-- A subject's ``sub-{sub_num}_task-things_space-T1w_label-brain_desc-union_mask.nii`` and
-``sub-{sub_num}_task-things_space-T1w_label-brain_desc-unionNonNaN_mask.nii`` masks created in Steps 2 and 5, respectively.
+- A subject's ``sub-{sub_num}_task-things_space-{T1w, MNI152NLin2009cAsym}_label-brain_desc-union_mask.nii`` and
+``sub-{sub_num}_task-things_space-{T1w, MNI152NLin2009cAsym}_label-brain_desc-unionNonNaN_mask.nii`` masks created in Steps 2 and 5, respectively.
 
 **Output**:
-- ``sub-{sub_num}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stat-trialBetas_desc-zscore_statseries.h5``, a single ``.h5`` file
+- ``sub-{sub_num}_task-things_space-{T1w, MNI152NLin2009cAsym}_model-fitHrfGLMdenoiseRR_stat-trialBetas_desc-zscore_statseries.h5``, a single ``.h5`` file
 that contains beta scores organized in nested groups whose key is the session number and sub-key is the run number.
 Betas are saved into arrays of dim=(trials, voxels) where each row is a 1D array of flattened voxel scores masked with the no-NaN functional mask. All trials are included, and rows correspond with those of the ``cneuromod-things/THINGS/fmriprep/sourcedata/things/sub-{sub_num}/ses-*/func/sub-{sub_num}_ses-*_task-things_run-*_events.tsv`` files.
 - Beside the betas, the ``.h5`` file also contains the raw 3D array and 4x4 affine matrix of the no-NaN functional mask, whose dims match the input bold volumes. These two arrays (``mask_array`` and ``mask_affine``) can be used to unmask 1D beta arrays to convert them back into brain volumes (in native space).
@@ -260,7 +258,7 @@ s10_r2_t5_unmasked_betas = unmask(np.array(h5file['10']['2']['betas'])[4, :], ma
 Average trial-wise beta scores estimated with GLMsingle modelD (FITHRF_GLMDENOISE_RR)
 per stimulus image, and save scores as one 1D arrays of flattened voxels per image in one .h5 file per subject.
 
-The number of repetitions, and the number of blank trials (no recorded button press), are also saved with each image's mean voxel-wise betas. Note that blank trials are excluded from the image-wise signal averaging.
+The number of repetitions, and the number of blank trials (no recorded button press), are also saved as meta-data with each image's averaged voxel-wise betas. Note that blank trials are excluded from the image-wise signal averaging.
 
 The script also performs validations on trial-wise metrics from ``*events.tsv`` files, subject-specific image-to-number mappings, and the design matrices given to GLMsingle.
 
@@ -269,6 +267,7 @@ Launch the following script for each subject
 DATADIR="cneuromod-things/THINGS"
 python GLMsingle_betasPerImg.py --things_dir="${DATADIR}" --zbetas --sub_num="01"
 ```
+Note: omit the ``--zbetas`` flag to extract raw GLMsingle betas (not z-scored). Add the ``--mni`` flag extract betas in MNI space (default is native T1w space).
 
 **Input**:
 - A subject's ``TYPED_FITHRF_GLMDENOISE_RR.mat``, a single .mat file outputted by GLMsingle (model D) in Step 4, which contains trial-unique betas per voxel
@@ -276,11 +275,11 @@ python GLMsingle_betasPerImg.py --things_dir="${DATADIR}" --zbetas --sub_num="01
 - ``sub-{sub_num}_task-things_imgDesignNumbers.json``, a file created in Step 1 that assigns a unique number to each stimulus image seen by the participant (>4000)
 - A subject's ``sub-{sub_num}_task-things_model-glmsingle_desc-sparse_design.h5`` file created in Step 1
 - A subject's ``cneuromod-things/THINGS/behaviour/sub-{sub_num}/beh/sub-{sub_num}_task-things_desc-perTrial_annotation.tsv``, a single .tsv file per subject with trial-wise performance metrics and image annotations created with the ``cneuromod-things/THINGS/behaviour/code/behav_data_annotate.py`` (see Step 6).
-- A subject's ``sub-{sub_num}_task-things_space-T1w_label-brain_desc-union_mask.nii`` and
-``sub-{sub_num}_task-things_space-T1w_label-brain_desc-unionNonNaN_mask.nii`` masks created in Steps 2 and 5, respectively.
+- A subject's ``sub-{sub_num}_task-things_space-{T1w, MNI152NLin2009cAsym}_label-brain_desc-union_mask.nii`` and
+``sub-{sub_num}_task-things_space-{T1w, MNI152NLin2009cAsym}_label-brain_desc-unionNonNaN_mask.nii`` masks created in Steps 2 and 5, respectively.
 
 **Output**: \
-``sub-{sub_num}_task-things_space-T1w_model-fitHrfGLMdenoiseRR_stat-imageBetas_desc-zscore_statseries.h5``, a file that contains beta scores organized in groups whose key is the image name (e.g., 'camel_02s'). Under each image, each group includes:
+``sub-{sub_num}_task-things_space-{T1w, MNI152NLin2009cAsym}_model-fitHrfGLMdenoiseRR_stat-imageBetas_desc-zscore_statseries.h5``, a file that contains beta scores organized in groups whose key is the image name (e.g., 'camel_02s'). Under each image, each group includes:
 - ``betas``: the betas averaged per image (up to 3 repetitions, excluding trials with no answer), saved as a 1D array of flattened voxels masked with the no-NaN functional mask.
 - ``num_reps``: the number of image repetitions included in the averaging.
 - ``blank``: the number of trials with no recorded answers (no button press)

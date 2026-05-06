@@ -84,7 +84,7 @@ def get_img_vector(things_dir, sub_num, sess_file, sessions, n=3, rm_blanks=Fals
             f"{things_dir}/behaviour/sub-{sub_num}/beh/"
             f"sub-{sub_num}_task-things_desc-perTrial_annotation.tsv"
         )
-        sub_df = pd.read_csv(df_path, sep = '\t')
+        sub_df = pd.read_csv(df_path, sep = '\t', low_memory=False)
 
     for ses in sessions:
         runs = [f'{x:02}' for x in list(sess_file[sub_num][ses])]

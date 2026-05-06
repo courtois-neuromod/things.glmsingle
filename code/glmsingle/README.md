@@ -113,7 +113,7 @@ cd ${CODEDIR}
 matlab -nodisplay -nosplash -nodesktop -r "sub_num='${SUB_NUM}';bold_type='${BD_TYPE}';chunk_size='${CHUNK_SZ}';code_dir='${CODEDIR}';data_dir='${DATADIR}';run('GLMsingle_run.m'); exit;"
 ```
 Note: load ``StdEnv/2020``, ``nixpkgs/16.09`` and ``matlab/2020a`` modules to run on
-Alliance Canada (168h job per subject, 36 CPUs per task, 5000M memory/CPU)
+Alliance Canada [on beluga (T1w space): 168h job per subject, 36 CPUs per task, 5000M memory/CPU; on rorqual (MNI space): 170h job per subject, 64 CPUs per task, 6000M memory/cpu, CHUNK_SZ="50000"]
 
 **Input**:
 - Subject's ``sub-{sub_num}_things_model-glmsingle_desc-sparse_design.h5`` file created in Step 1.

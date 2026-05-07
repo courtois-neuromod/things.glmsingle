@@ -33,11 +33,17 @@ def get_arguments():
         type=str,
         help='two-digit subject number',
     )
+    parser.add_argument(
+        '--mni',
+        action='store_true',
+        default=False,
+        help='if true, extract betas in MNI space, else native T1w space',
+    )    
 
     return parser.parse_args()
 
 
-def compile_betas_hdf5(data_dir, sub_num, zbetas=False):
+def compile_betas_hdf5(data_dir, sub_num, zbetas=False, mni=False):
     '''
     load list of sessions and their runs for that subject
     '''
@@ -47,13 +53,14 @@ def compile_betas_hdf5(data_dir, sub_num, zbetas=False):
     '''
     Load union and clean (no NaN voxels) functional masks
     '''
+    vol_space = 'MNI152NLin2009cAsym' if mni else 'T1w'
     union_mask = nib.load(
         f"{data_dir}/sub-{sub_num}/glmsingle/input/"
-        f"sub-{sub_num}_task-things_space-T1w_label-brain_desc-union_mask.nii"
+        f"sub-{sub_num}_task-things_space-{vol_space}_label-brain_desc-union_mask.nii"
     )
     clean_mask = nib.load(
         f"{data_dir}/sub-{sub_num}/glmsingle/input/"
-        f"sub-{sub_num}_task-things_space-T1w_label-brain_desc-unionNonNaN_mask.nii"
+        f"sub-{sub_num}_task-things_space-{vol_space}_label-brain_desc-unionNonNaN_mask.nii"
     )
     num_vox = int(np.sum(union_mask.get_fdata()))
 
@@ -61,7 +68,7 @@ def compile_betas_hdf5(data_dir, sub_num, zbetas=False):
     Get subject's GLMs output file
     '''
     mat_file = Path(
-        f"{data_dir}/sub-{sub_num}/glmsingle/output/T1w/"
+        f"{data_dir}/sub-{sub_num}/glmsingle/output/{vol_space}/"
         "TYPED_FITHRF_GLMDENOISE_RR.mat"
     )
     gfile = h5py.File(mat_file, 'r')
@@ -79,7 +86,7 @@ def compile_betas_hdf5(data_dir, sub_num, zbetas=False):
     zname = 'desc-zscore_' if zbetas else ''
     subj_h5file = h5py.File(
         f"{data_dir}/sub-{sub_num}/glmsingle/output/sub-{sub_num}_task-things_"
-        f"space-T1w_model-fitHrfGLMdenoiseRR_stat-trialBetas_{zname}statseries.h5",
+        f"space-{vol_space}_model-fitHrfGLMdenoiseRR_stat-trialBetas_{zname}statseries.h5",
         'w',
     )
 
@@ -117,4 +124,4 @@ if __name__ == '__main__':
     """
     args = get_arguments()
 
-    compile_betas_hdf5(args.data_dir, args.sub_num, args.zbetas)
+    compile_betas_hdf5(args.data_dir, args.sub_num, args.zbetas, args.mni)

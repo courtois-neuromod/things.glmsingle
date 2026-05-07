@@ -29,18 +29,25 @@ if __name__ == '__main__':
         type=str,
         help='path to THINGS data directory',
     )
+    parser.add_argument(
+        '--mni',
+        action='store_true',
+        default=False,
+        help='if true, create masks in MNI space, else native T1w space',
+    )    
     args = parser.parse_args()
 
     in_path = f"{args.things_dir}/fmriprep"
     out_path = f"{args.things_dir}/glmsingle"
 
     sub_list = ['01', '02', '03', '06']
-    suffix = '_part-mag_space-T1w_desc-preproc_bold.nii.gz'
+    vol_space = 'MNI152NLin2009cAsym' if args.mni else 'T1w'
+    suffix = f'_part-mag_space-{vol_space}_desc-preproc_bold.nii.gz'
 
     for sub_num in sub_list:
         mask_path = f'{out_path}/sub-{sub_num}/glmsingle/input'
         mask = nib.load(
-            f'{mask_path}/sub-{sub_num}_task-things_space-T1w_label-brain_desc-union_mask.nii'
+            f'{mask_path}/sub-{sub_num}_task-things_space-{vol_space}_label-brain_desc-union_mask.nii'
         )
 
         bold_files = sorted(
@@ -74,9 +81,9 @@ if __name__ == '__main__':
 
         nib.save(
             global_nan_mask,
-            f'{mask_path}/sub-{sub_num}_task-things_space-T1w_label-brain_desc-unionNaN_mask.nii'
+            f'{mask_path}/sub-{sub_num}_task-things_space-{vol_space}_label-brain_desc-unionNaN_mask.nii'
         )
         nib.save(
             global_goodvox_mask,
-            f'{mask_path}/sub-{sub_num}_task-things_space-T1w_label-brain_desc-unionNonNaN_mask.nii',
+            f'{mask_path}/sub-{sub_num}_task-things_space-{vol_space}_label-brain_desc-unionNonNaN_mask.nii',
         )
